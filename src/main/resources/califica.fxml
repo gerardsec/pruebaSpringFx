@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+    <VBox prefHeight="511.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ggs.springfx.demo.controller.Controller">
+        <children>
+            <MenuBar>
+                <menus>
+                    <Menu mnemonicParsing="false" text="File">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Close" />
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Datos">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Aspirantes" />
+                            <MenuItem mnemonicParsing="false" text="Lectura 1" />
+                            <MenuItem mnemonicParsing="false" text="Lectura 2" />
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Edit">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Delete" />
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Help">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="About" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+            <SplitPane dividerPositions="0.21503759398496242" prefHeight="454.0" prefWidth="738.0">
+                <items>
+                    <AnchorPane accessibleHelp="Este es un texto de prueba" minHeight="0.0" minWidth="0.0" prefHeight="452.0" prefWidth="131.0">
+                        <children>
+                            <TextField fx:id="numCasos" layoutX="14.0" layoutY="42.0" prefHeight="27.0" prefWidth="88.0" promptText="Número de casos" rotate="-33.7" />
+                            <Button layoutX="37.0" layoutY="119.0" mnemonicParsing="false" onAction="#recibirNumero" text="Enviar" />
+                        </children>
+                    </AnchorPane>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="447.0" prefWidth="463.0">
+                        <children>
+                            <TableView fx:id="personaTableView" editable="true" layoutX="14.0" layoutY="23.0" onMouseClicked="#clickOnTable" prefHeight="354.0" prefWidth="518.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="98.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columns>
+                                    <TableColumn fx:id="claveTColumn" prefWidth="75.0" text="Clave" />
+                                    <TableColumn fx:id="nombreTColumn" onEditCommit="#editNombre" prefWidth="75.0" text="Nombre" />
+                                    <TableColumn fx:id="edadTColumn" prefWidth="75.0" text="Edad" />
+                                    <TableColumn fx:id="nacimientoTColumn" prefWidth="75.0" text="Nacimiento" />
+                                </columns>
+                            </TableView>
+                            <AnchorPane layoutX="1.0" layoutY="357.0" prefHeight="89.0" prefWidth="518.0">
+                                <children>
+                                    <TextField fx:id="nombreActual" layoutX="41.0" layoutY="17.0" prefHeight="27.0" prefWidth="104.0" />
+                                    <Button layoutX="240.0" layoutY="17.0" mnemonicParsing="false" onAction="#agregaRegistro" text="Agregar" />
+                                </children></AnchorPane>
+                        </children>
+                    </AnchorPane>
+                </items>
+            </SplitPane>
+            <HBox prefHeight="24.0" prefWidth="714.0" />
+        </children>
+    </VBox>
