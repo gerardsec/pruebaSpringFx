@@ -40,14 +40,20 @@ public class Controller {
   public TableColumn<Persona, Integer> edadTColumn;
   @FXML
   public TableColumn<Persona, LocalDate> nacimientoTColumn;
-
-
-  public ObservableList<Persona> personaObservableList;
+  @FXML
+  public TextField nombreNuevo;
+  @FXML
+  public Slider edadNuevo;
 
   @FXML
-  TableView<Persona> personaTableView = new TableView<>();
+  DatePicker nacimientoNuevo;
+
   @FXML
   private TextField numCasos;
+  @FXML
+  TableView<Persona> personaTableView = new TableView<>();
+
+  public ObservableList<Persona> personaObservableList;
 
   @Autowired
   private PersonaService personaService;
@@ -113,6 +119,14 @@ public class Controller {
       }
     });
     personaTableView.setItems(personaObservableList);
+    //Slider de edad para nuevo registro
+    edadNuevo.setMinorTickCount(5);
+    edadNuevo.setMax(100.0);
+    edadNuevo.setMajorTickUnit(10);
+    edadNuevo.setShowTickLabels(true);
+    edadNuevo.setShowTickMarks(true);
+    edadNuevo.setMinorTickCount(1);
+    edadNuevo.setBlockIncrement(1);
 
 
   }
@@ -149,6 +163,9 @@ public class Controller {
 
   public void agregaRegistro(ActionEvent actionEvent) {
     System.out.println("Agrega Registro");
+    System.out.println("Nombre:"+nombreNuevo.getText());
+    System.out.println("Edad:"+edadNuevo.getValue());
+    System.out.println("Nacimiento:"+nacimientoNuevo.getValue());
   }
 
   private class ButtonCell extends TableCell<Disposer.Record, Boolean> {

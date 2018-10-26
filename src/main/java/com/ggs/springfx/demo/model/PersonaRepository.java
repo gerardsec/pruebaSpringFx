@@ -9,4 +9,3 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
   @Query("SELECT coalesce(max(ch.clave), 0) FROM Persona ch")
   Integer maxClave();
 }
-  //select coalesce(max(CLAVE),0) from PERSONA

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -12,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-    <VBox prefHeight="511.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ggs.springfx.demo.controller.Controller">
+<VBox prefHeight="511.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ggs.springfx.demo.controller.Controller">
         <children>
             <MenuBar>
                 <menus>
@@ -60,8 +62,10 @@
                             </TableView>
                             <AnchorPane layoutX="1.0" layoutY="357.0" prefHeight="89.0" prefWidth="518.0">
                                 <children>
-                                    <TextField fx:id="nombreActual" layoutX="41.0" layoutY="17.0" prefHeight="27.0" prefWidth="104.0" />
-                                    <Button layoutX="240.0" layoutY="17.0" mnemonicParsing="false" onAction="#agregaRegistro" text="Agregar" />
+                                    <TextField fx:id="nombreNuevo" layoutX="36.0" layoutY="11.0" prefHeight="27.0" prefWidth="149.0" promptText="Nombre" />
+                                    <Button layoutX="436.0" layoutY="31.0" mnemonicParsing="false" onAction="#agregaRegistro" text="Agregar" />
+                        <Slider fx:id="edadNuevo" layoutX="41.0" layoutY="45.0" majorTickUnit="10.0" minorTickCount="5" prefHeight="38.0" prefWidth="327.0" showTickLabels="true" showTickMarks="true" />
+                        <DatePicker fx:id="nacimientoNuevo" layoutX="196.0" layoutY="11.0" />
                                 </children></AnchorPane>
                         </children>
                     </AnchorPane>
