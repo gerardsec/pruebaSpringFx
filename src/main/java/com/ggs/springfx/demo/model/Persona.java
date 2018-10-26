@@ -1,28 +1,16 @@
 package com.ggs.springfx.demo.model;
+
 import javafx.beans.property.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "persona", schema = "public")
 public class Persona {
-
-//  @Id
-//  @GeneratedValue(strategy = GenerationType.IDENTITY)
-//  @Column(nullable = false, columnDefinition = "BIGINT")
-//  private Long id;
-//  @Column(nullable = false)
-//  private String content;
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(nullable = false)
   private IntegerProperty clave;
-  @Column(nullable = false)
   private StringProperty nombre;
-  @Column(nullable = false)
   private IntegerProperty edad;
-  @Column
   private ObjectProperty<LocalDate> nacimiento;
 
   public Persona(Integer clave, String nombre, Integer edad, LocalDate nacimiento) {
@@ -32,11 +20,11 @@ public class Persona {
     nacimientoProperty().set(nacimiento);
   }
 
+  public Persona(){};
 
-  public IntegerProperty claveProperty() {
-    if (clave == null) clave = new SimpleIntegerProperty(this, "clave");
-    return clave;
-  }
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(nullable = false)
 
   public Integer getClave() {
     return claveProperty().get();
@@ -46,11 +34,13 @@ public class Persona {
     claveProperty().set(clave);
   }
 
-  public StringProperty nombreProperty() {
-    if (nombre == null) nombre = new SimpleStringProperty(this, "nombre");
-    return nombre;
+  public IntegerProperty claveProperty() {
+    if (clave == null) clave = new SimpleIntegerProperty(this, "clave");
+    return clave;
   }
 
+
+  @Column(nullable = false)
   public String getNombre() {
     return nombreProperty().get();
   }
@@ -59,11 +49,13 @@ public class Persona {
     this.nombreProperty().set(nombre);
   }
 
-  public IntegerProperty edadProperty() {
-    if (edad == null) edad = new SimpleIntegerProperty(this, "edad");
-    return edad;
+
+  public StringProperty nombreProperty() {
+    if (nombre == null) nombre = new SimpleStringProperty(this, "nombre");
+    return nombre;
   }
 
+  @Column(nullable = false)
   public Integer getEdad() {
     return edadProperty().get();
   }
@@ -72,12 +64,14 @@ public class Persona {
     edadProperty().set(edad);
   }
 
-  public ObjectProperty<LocalDate> nacimientoProperty(){
-    if(nacimiento==null) nacimiento=new SimpleObjectProperty<LocalDate>(this,"nacimiento");
-    return nacimiento;
+  public IntegerProperty edadProperty() {
+    if (edad == null) edad = new SimpleIntegerProperty(this, "edad");
+    return edad;
   }
 
-  public LocalDate getNacimiento(){
+
+  @Column
+  public LocalDate getNacimiento() {
     return nacimientoProperty().get();
   }
 
@@ -85,6 +79,9 @@ public class Persona {
     nacimientoProperty().set(nacimiento);
   }
 
-
+  public ObjectProperty<LocalDate> nacimientoProperty() {
+    if (nacimiento == null) nacimiento = new SimpleObjectProperty<LocalDate>(this, "nacimiento");
+    return nacimiento;
+  }
 }
 

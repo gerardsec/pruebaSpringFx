@@ -4,6 +4,7 @@ package com.ggs.springfx.demo.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "article", schema = "public")
 public class Article {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,6 +2,7 @@ package com.ggs.springfx.demo.controller;
 
 import com.ggs.springfx.demo.model.ArticleRepository;
 import com.ggs.springfx.demo.model.Persona;
+import com.ggs.springfx.demo.model.PersonaService;
 import com.sun.prism.impl.Disposer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -46,6 +47,9 @@ public class Controller {
   TableView<Persona> personaTableView = new TableView<>();
   @FXML
   private TextField numCasos;
+
+  @Autowired
+  private PersonaService personaService;
 
   static public ObservableList<Persona> generaPersonas() {
     List<Persona> personaList = new ArrayList<Persona>();
@@ -123,6 +127,8 @@ public class Controller {
       }
     });
     personaTableView.setItems(personaObservableList);
+
+
   }
 
   @FXML
@@ -132,11 +138,34 @@ public class Controller {
     String cadena = numCasos.getText();
     Integer largo = numCasos.getLength();
     System.out.println(cadena + " largo:" + largo);
+    Integer intNumCasos = Integer.parseInt(cadena);
+    System.out.println("recibe número:"+intNumCasos);
 
     numCasos.textProperty().setValue(numCasosVar);
     for (Persona persona : personaObservableList) {
       System.out.println(persona.getClave() + "," + persona.getNombre() + "," + persona.getNacimiento() + ", edad:" + persona.getEdad());
     }
+    //ejercicio para recuperar datos de la base de datos
+    List<Persona> personaList = personaService.findAll();
+    System.out.println("***resultado BD");
+    for (Persona persona:personaList) {
+      System.out.println("clave:"+persona.getClave());
+    }
+    Integer claveMayor = personaService.buscaClaveMayor();
+    //TEMPORAL
+    Integer clave;
+    String nombre;
+    Integer edad;
+    LocalDate nacimiento;
+    clave = intNumCasos;
+    nombre = "Juan";
+    edad = 20;
+    nacimiento = LocalDate.now();
+    Persona personaNueva = new Persona(clave,nombre,edad,nacimiento);
+    personaService.agrega(personaNueva);
+    System.out.println("Persona nueva:"+personaNueva.getClave());
+
+
   }
 
   public void clickOnTable(MouseEvent mouseEvent) {
