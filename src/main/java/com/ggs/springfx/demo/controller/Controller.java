@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.*;
+
 @Component
 public class Controller {
 
@@ -51,28 +52,13 @@ public class Controller {
   @Autowired
   private PersonaService personaService;
 
-  static public ObservableList<Persona> generaPersonas() {
-    List<Persona> personaList = new ArrayList<Persona>();
-    Integer clave;
-    String nombre;
-    Integer edad;
-    LocalDate nacimiento;
-    clave = 0;
-    nombre = "Juan";
-    edad = 20;
-    nacimiento = LocalDate.now();
-    personaList.add(new Persona(clave, nombre, edad, nacimiento));
-    clave = 1;
-    nombre = "Pedro";
-    edad = 21;
-    personaList.add(new Persona(clave, nombre, edad, nacimiento));
-    clave = 2;
-    nombre = "Luis";
-    edad = 22;
-    personaList.add(new Persona(clave, nombre, edad, nacimiento));
+  public ObservableList<Persona> generaPersonas() {
+
+    List<Persona> personaList = personaService.findAll();
     ObservableList<Persona> personaObservableList0 = FXCollections.observableList(personaList);
     for (Persona persona : personaObservableList0) {
-      System.out.println(persona.getClave() + "," + persona.getNombre() + "," + persona.getNacimiento() + ", edad:" + persona.getEdad());
+      System.out.println(persona.getClave() + "," + persona.getNombre() + "," +
+              persona.getNacimiento() + ", edad:" + persona.getEdad());
     }
     return personaObservableList0;
   }
@@ -139,32 +125,13 @@ public class Controller {
     Integer largo = numCasos.getLength();
     System.out.println(cadena + " largo:" + largo);
     Integer intNumCasos = Integer.parseInt(cadena);
-    System.out.println("recibe número:"+intNumCasos);
+    System.out.println("recibe número:" + intNumCasos);
 
     numCasos.textProperty().setValue(numCasosVar);
     for (Persona persona : personaObservableList) {
-      System.out.println(persona.getClave() + "," + persona.getNombre() + "," + persona.getNacimiento() + ", edad:" + persona.getEdad());
+      System.out.println(persona.getClave() + "," + persona.getNombre() + "," +
+              persona.getNacimiento() + ", edad:" + persona.getEdad());
     }
-    //ejercicio para recuperar datos de la base de datos
-    List<Persona> personaList = personaService.findAll();
-    System.out.println("***resultado BD");
-    for (Persona persona:personaList) {
-      System.out.println("clave:"+persona.getClave());
-    }
-    Integer claveMayor = personaService.buscaClaveMayor();
-    //TEMPORAL
-    Integer clave;
-    String nombre;
-    Integer edad;
-    LocalDate nacimiento;
-    clave = intNumCasos;
-    nombre = "Juan";
-    edad = 20;
-    nacimiento = LocalDate.now();
-    Persona personaNueva = new Persona(clave,nombre,edad,nacimiento);
-    personaService.agrega(personaNueva);
-    System.out.println("Persona nueva:"+personaNueva.getClave());
-
 
   }
 
