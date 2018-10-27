@@ -8,11 +8,12 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-    <VBox prefHeight="511.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ggs.springfx.demo.controller.Controller">
+<VBox prefHeight="511.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ggs.springfx.demo.controller.Controller">
         <children>
             <MenuBar>
                 <menus>
@@ -44,7 +45,10 @@
                 <items>
                     <AnchorPane accessibleHelp="Este es un texto de prueba" minHeight="0.0" minWidth="0.0" prefHeight="452.0" prefWidth="131.0">
                         <children>
-                            <TextField fx:id="numCasos" layoutX="14.0" layoutY="42.0" prefHeight="27.0" prefWidth="88.0" promptText="Número de casos" rotate="-33.7" />
+                            <TextField fx:id="numCasos" layoutX="14.0" layoutY="42.0" prefHeight="27.0" prefWidth="88.0" promptText="Número de casos" rotate="-33.7">
+                     <tooltip>
+                        <Tooltip text=" lorem ipsum data for gutter" />
+                     </tooltip></TextField>
                             <Button layoutX="37.0" layoutY="119.0" mnemonicParsing="false" onAction="#recibirNumero" text="Enviar" />
                         </children>
                     </AnchorPane>

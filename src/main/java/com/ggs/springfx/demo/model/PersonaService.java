@@ -24,8 +24,8 @@ public void agrega(Persona persona) {
 }
 
   public Integer buscaClaveMayor() {
-    //final Optional<Integer> claveM = personaRepository.maxClave();
-    //personaRepository.maxClave();
-    return 1;
+    final Integer claveM = personaRepository.maxClave();
+    return personaRepository.maxClave();
+    //return 1;
   }
 }

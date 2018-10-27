@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona,Integer> {
-//  @Query("SELECT coalesce(max(ch.clave), 0) FROM persona ch")
-//  Integer maxClave();
+  @Query("SELECT coalesce(max(ch.clave), 0) FROM Persona ch")
+  Integer maxClave();
 }
