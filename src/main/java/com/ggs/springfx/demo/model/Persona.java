@@ -3,14 +3,21 @@ package com.ggs.springfx.demo.model;
 import javafx.beans.property.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "persona", schema = "public")
 public class Persona {
   private IntegerProperty clave;
+
   private StringProperty nombre;
+
   private IntegerProperty edad;
+
   private ObjectProperty<LocalDate> nacimiento;
 
   public Persona(Integer clave, String nombre, Integer edad, LocalDate nacimiento) {
@@ -39,7 +46,7 @@ public class Persona {
     return clave;
   }
 
-
+  @NotNull(message = "El nombre no puede estar en blanco")
   @Column(nullable = false)
   public String getNombre() {
     return nombreProperty().get();
@@ -54,7 +61,8 @@ public class Persona {
     if (nombre == null) nombre = new SimpleStringProperty(this, "nombre");
     return nombre;
   }
-
+  @Min(value = 1, message = "Debe tener al menos 1 año")
+  @Max(value = 150, message = "No puede ser mayor a 150")
   @Column(nullable = false)
   public Integer getEdad() {
     return edadProperty().get();
@@ -69,7 +77,7 @@ public class Persona {
     return edad;
   }
 
-
+  @Past(message = "Debe ser anterior a la fecha actual")
   @Column
   public LocalDate getNacimiento() {
     return nacimientoProperty().get();

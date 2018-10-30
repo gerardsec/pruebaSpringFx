@@ -18,9 +18,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LocalDateStringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -47,6 +53,12 @@ public class Controller {
   @Autowired
   private PersonaService personaService;
 
+  //Validación de datos
+  ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+  Validator validator = factory.getValidator();
+  //Log de esta clase
+  private static final Logger logController = LoggerFactory.getLogger(Controller.class);
+
   public ObservableList<Persona> generaPersonas() {
     //ejercicio para recuperar datos de la base de datos
     List<Persona> personaList = personaService.findAll();
@@ -64,6 +76,7 @@ public class Controller {
 
   //@Override
   public void initialize() {
+
     numCasos.setPromptText("Clave a buscar");
     //numCasos solo acepta números
     numCasos.setTextFormatter(new TextFormatter<>(change -> (change.getControlNewText().matches("([1-9][0-9]*)?")) ? change : null));
@@ -146,9 +159,21 @@ public class Controller {
     nombre = "Juan";
     edad = 20;
     nacimiento = LocalDate.now();
+    //nacimiento = LocalDate.parse("2017-01-01");
     Persona personaNueva = new Persona(clave, nombre, edad, nacimiento);
+    //validación mediante validator
+    Set<ConstraintViolation<Persona>> violations = validator.validate(personaNueva);
+    for (ConstraintViolation<Persona> violation : violations) {
+      logController.error(violation.getMessage());
+    }
+    System.out.println(violations.isEmpty());
+    if(violations.isEmpty()){
     personaService.agrega(personaNueva);
-    System.out.println("Persona nueva:" + personaNueva.getClave());
+    System.out.println("Persona nueva:" + personaNueva.getClave());}
+    else {
+      System.out.println("Errores input persona");
+    }
+
   }
 
   public ButtonType mensaje(String tipo, String title, String header, String content) {
@@ -179,6 +204,7 @@ public class Controller {
     return buttonType;
   }
 
+  //Clase para el botón en una celda de la tableview
   private class ButtonCell extends TableCell<Disposer.Record, Boolean> {
     final Button cellButton = new Button("Borrar");
 
