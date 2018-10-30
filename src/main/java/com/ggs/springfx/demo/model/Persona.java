@@ -46,7 +46,7 @@ public class Persona {
     return clave;
   }
 
-  @NotNull(message = "El nombre no puede estar en blanco")
+  @NotNull(message = "Nombre: no puede estar en blanco")
   @Column(nullable = false)
   public String getNombre() {
     return nombreProperty().get();
@@ -61,8 +61,8 @@ public class Persona {
     if (nombre == null) nombre = new SimpleStringProperty(this, "nombre");
     return nombre;
   }
-  @Min(value = 1, message = "Debe tener al menos 1 año")
-  @Max(value = 150, message = "No puede ser mayor a 150")
+  @Min(value = 1, message = "Edad: Debe tener al menos 1 año")
+  @Max(value = 150, message = "Edad: No puede ser mayor a 150")
   @Column(nullable = false)
   public Integer getEdad() {
     return edadProperty().get();
@@ -77,7 +77,7 @@ public class Persona {
     return edad;
   }
 
-  @Past(message = "Debe ser anterior a la fecha actual")
+  @Past(message = "F Nacimiento: debe ser anterior")
   @Column
   public LocalDate getNacimiento() {
     return nacimientoProperty().get();
