@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.PickResult;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LocalDateStringConverter;
@@ -33,6 +34,8 @@ import java.util.*;
 @Component
 public class Controller {
 
+  //Log de esta clase
+  private static final Logger logController = LoggerFactory.getLogger(Controller.class);
   public String numCasosVar;
   @FXML
   public TableColumn<Persona, Integer> claveTColumn;
@@ -45,19 +48,22 @@ public class Controller {
   public ObservableList<Persona> personaObservableList;
   @FXML
   TableView<Persona> personaTableView = new TableView<>();
+  //Validación de datos
+  ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+  Validator validator = factory.getValidator();
   @Autowired
   private ArticleRepository articleRepository;
   @FXML
   private TextField numCasos;
-
+  //Para insertar un registro
+  @FXML
+  private TextField nombreNuevo;
+  @FXML
+  private Spinner<Integer> edadNuevo;
+  @FXML
+  private DatePicker nacimientoNuevo;
   @Autowired
   private PersonaService personaService;
-
-  //Validación de datos
-  ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-  Validator validator = factory.getValidator();
-  //Log de esta clase
-  private static final Logger logController = LoggerFactory.getLogger(Controller.class);
 
   public ObservableList<Persona> generaPersonas() {
     //ejercicio para recuperar datos de la base de datos
@@ -76,7 +82,11 @@ public class Controller {
 
   //@Override
   public void initialize() {
-
+//spinner para seleccionar edad;
+    SpinnerValueFactory<Integer> valueFactory =
+            new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 150, 18);
+    edadNuevo.setValueFactory(valueFactory);
+    edadNuevo.setEditable(true);
     numCasos.setPromptText("Clave a buscar");
     //numCasos solo acepta números
     numCasos.setTextFormatter(new TextFormatter<>(change -> (change.getControlNewText().matches("([1-9][0-9]*)?")) ? change : null));
@@ -156,21 +166,31 @@ public class Controller {
     Integer edad;
     LocalDate nacimiento;
     clave = 15;
-    nombre = "Juan";
-    edad = 20;
-    nacimiento = LocalDate.now();
-    //nacimiento = LocalDate.parse("2017-01-01");
+    nombre = nombreNuevo.getText();
+    System.out.println("nuevonombre:" + nombre);
+    edad = edadNuevo.getValue();
+    System.out.println("nuevo edad:" + edad);
+    Optional<LocalDate> checaNacimiento = Optional.ofNullable(nacimientoNuevo.getValue());
+    if(checaNacimiento.isPresent()) ...........
+    System.out.println("nuevo nacimiento:" + nacimientoNuevo.getValue().toString());
     Persona personaNueva = new Persona(clave, nombre, edad, nacimiento);
+    System.out.println(personaNueva.toString());
     //validación mediante validator
     Set<ConstraintViolation<Persona>> violations = validator.validate(personaNueva);
     for (ConstraintViolation<Persona> violation : violations) {
       logController.error(violation.getMessage());
     }
     System.out.println(violations.isEmpty());
-    if(violations.isEmpty()){
-    personaService.agrega(personaNueva);
-    System.out.println("Persona nueva:" + personaNueva.getClave());}
-    else {
+    if (violations.isEmpty()) {
+      Integer personaAgregada = personaService.agrega(personaNueva);
+      if (personaAgregada != 0) {
+        personaObservableList.add(personaNueva);
+        personaTableView.refresh();
+        System.out.println("Persona nueva:" + personaNueva.getClave());
+      } else {
+        System.out.println("Errores al guardar persona");
+      }
+    } else {
       System.out.println("Errores input persona");
     }
 

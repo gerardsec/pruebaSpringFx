@@ -19,9 +19,10 @@ public class PersonaService {
     return personaRepository.findAll();
   }
 
-public void agrega(Persona persona) {
-    personaRepository.save(persona);
-}
+  public Integer agrega(Persona persona) {
+    Persona personaSave = personaRepository.save(persona);
+    return  personaSave != null ?  personaSave.getClave() :  0;
+  }
 
   public Integer buscaClaveMayor() {
     final Integer claveM = personaRepository.maxClave();
