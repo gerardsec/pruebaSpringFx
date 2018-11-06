@@ -3,15 +3,13 @@ package com.ggs.springfx.demo.model;
 import javafx.beans.property.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "persona", schema = "public")
 public class Persona {
+
   private IntegerProperty clave;
 
   private StringProperty nombre;
@@ -27,12 +25,14 @@ public class Persona {
     nacimientoProperty().set(nacimiento);
   }
 
-  public Persona(){};
+  public Persona() {
+  }
+
+  ;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false)
-
   public Integer getClave() {
     return claveProperty().get();
   }
@@ -47,6 +47,7 @@ public class Persona {
   }
 
   @NotNull(message = "Nombre: no puede estar en blanco")
+  @Size(min = 1, message = "Nombre: debe tener al menos dos caracteres")
   @Column(nullable = false)
   public String getNombre() {
     return nombreProperty().get();
@@ -56,11 +57,11 @@ public class Persona {
     this.nombreProperty().set(nombre);
   }
 
-
   public StringProperty nombreProperty() {
     if (nombre == null) nombre = new SimpleStringProperty(this, "nombre");
     return nombre;
   }
+
   @Min(value = 1, message = "Edad: Debe tener al menos 1 año")
   @Max(value = 150, message = "Edad: No puede ser mayor a 150")
   @Column(nullable = false)
@@ -90,6 +91,16 @@ public class Persona {
   public ObjectProperty<LocalDate> nacimientoProperty() {
     if (nacimiento == null) nacimiento = new SimpleObjectProperty<LocalDate>(this, "nacimiento");
     return nacimiento;
+  }
+
+  @Override
+  public String toString() {
+    return "Persona{" +
+            "clave=" + getClave() +
+            ", nombre=" + getNombre() +
+            ", edad=" + getEdad() +
+            ", nacimiento=" + getNacimiento() +
+            '}';
   }
 }
 

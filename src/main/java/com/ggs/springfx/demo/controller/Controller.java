@@ -15,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.PickResult;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LocalDateStringConverter;
@@ -124,7 +123,7 @@ public class Controller {
     col_action.setCellFactory(new Callback<TableColumn<Disposer.Record, Boolean>, TableCell<Disposer.Record, Boolean>>() {
       @Override
       public TableCell<Disposer.Record, Boolean> call(TableColumn<Disposer.Record, Boolean> param) {
-        return new ButtonCell();
+        return new ButtonCellBorrar();
       }
     });
     personaTableView.setItems(personaObservableList);
@@ -167,33 +166,35 @@ public class Controller {
     LocalDate nacimiento;
     clave = 15;
     nombre = nombreNuevo.getText();
-    System.out.println("nuevonombre:" + nombre);
     edad = edadNuevo.getValue();
-    System.out.println("nuevo edad:" + edad);
     Optional<LocalDate> checaNacimiento = Optional.ofNullable(nacimientoNuevo.getValue());
-    if(checaNacimiento.isPresent()) ...........
-    System.out.println("nuevo nacimiento:" + nacimientoNuevo.getValue().toString());
+    nacimiento = (checaNacimiento.isPresent() ? nacimientoNuevo.getValue() : null);
     Persona personaNueva = new Persona(clave, nombre, edad, nacimiento);
-    System.out.println(personaNueva.toString());
+    System.out.println("Nuevo registro:" + personaNueva.toString());
     //validación mediante validator
     Set<ConstraintViolation<Persona>> violations = validator.validate(personaNueva);
+    String cadenaViolation = "\nErrores: ";
     for (ConstraintViolation<Persona> violation : violations) {
-      logController.error(violation.getMessage());
+      //logController.error(violation.getMessage());
+      cadenaViolation += "\n"+violation.getMessage() + "; ";
     }
     System.out.println(violations.isEmpty());
     if (violations.isEmpty()) {
       Integer personaAgregada = personaService.agrega(personaNueva);
       if (personaAgregada != 0) {
+        personaNueva.setClave(personaAgregada);
         personaObservableList.add(personaNueva);
         personaTableView.refresh();
-        System.out.println("Persona nueva:" + personaNueva.getClave());
+        logController.info("Se agregó un nuevo registro:" + personaNueva.toString());
+        System.out.println("Persona nueva:" + personaNueva.toString());
       } else {
-        System.out.println("Errores al guardar persona");
+        mensaje("E", "Error al guardar", "Error al guardar en la base de datos",
+                personaNueva.toString());
       }
     } else {
-      System.out.println("Errores input persona");
+      mensaje("E", "Errores en los datos", "Corrija los datos de entrada",
+              personaNueva.toString()+cadenaViolation);
     }
-
   }
 
   public ButtonType mensaje(String tipo, String title, String header, String content) {
@@ -225,10 +226,10 @@ public class Controller {
   }
 
   //Clase para el botón en una celda de la tableview
-  private class ButtonCell extends TableCell<Disposer.Record, Boolean> {
+  private class ButtonCellBorrar extends TableCell<Disposer.Record, Boolean> {
     final Button cellButton = new Button("Borrar");
 
-    ButtonCell() {
+    ButtonCellBorrar() {
       //Action when the button is pressed
       cellButton.setOnAction(new EventHandler<ActionEvent>() {
         @Override
@@ -237,8 +238,16 @@ public class Controller {
           ButtonType buttonType = mensaje("C", "Título", "Se borrará el registro de forma definitiva", "¿Está seguro?");
           if (buttonType != ButtonType.OK) return;
           // get Selected Item
-          Persona currentPerson = (Persona) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
+          Persona currentPerson = (Persona) ButtonCellBorrar.this.getTableView().getItems().get(ButtonCellBorrar.this.getIndex());
           //remove selected item from the table list
+          Integer borrado = personaService.borraPersona(currentPerson.getClave());
+          if (borrado == 0) {
+            logController.error("No se pudo borrar el registro:" + currentPerson.toString());
+            mensaje("E", "Error", "No se pudo borrar el registro en la base de datos",
+                    currentPerson.toString());
+            return;
+          }
+          logController.info("Se borró el registro:" + currentPerson.toString());
           personaObservableList.remove(currentPerson);
           personaTableView.refresh();
         }

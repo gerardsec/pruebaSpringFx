@@ -59,7 +59,7 @@
                         <children>
                   <VBox prefHeight="480.0" prefWidth="518.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                                  <TableView fx:id="personaTableView" editable="true" onMouseClicked="#clickOnTable" prefHeight="383.0" prefWidth="518.0" tableMenuButtonVisible="true">
+                                  <TableView fx:id="personaTableView" editable="true" prefHeight="383.0" prefWidth="518.0" tableMenuButtonVisible="true">
                                       <columns>
                                           <TableColumn fx:id="claveTColumn" prefWidth="75.0" text="Clave" />
                                           <TableColumn fx:id="nombreTColumn" onEditCommit="#editNombre" prefWidth="75.0" text="Nombre" />

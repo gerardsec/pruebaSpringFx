@@ -21,12 +21,30 @@ public class PersonaService {
 
   public Integer agrega(Persona persona) {
     Persona personaSave = personaRepository.save(persona);
-    return  personaSave != null ?  personaSave.getClave() :  0;
+    return personaSave != null ? personaSave.getClave() : 0;
   }
 
   public Integer buscaClaveMayor() {
     final Integer claveM = personaRepository.maxClave();
     return personaRepository.maxClave();
     //return 1;
+  }
+
+  public Integer borraPersona(Integer clave) {
+    Optional<Persona> encontrado;
+    encontrado = personaRepository.findById(clave);
+    if(!encontrado.isPresent()){
+      return 0;
+    }
+    Persona personaBorrar = encontrado.get();
+    personaRepository.delete(personaBorrar);
+    return 1;
+  }
+  public Integer actualizaPersona(Persona persona){
+    if(!personaRepository.existsById(persona.getClave())){
+      return 0;
+    }
+    personaRepository.save(persona);
+    return 1;
   }
 }
