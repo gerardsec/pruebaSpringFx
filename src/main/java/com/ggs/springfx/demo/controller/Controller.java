@@ -110,20 +110,38 @@ public class Controller {
     nacimientoTColumn.setOnEditCommit(data -> {
       data.getRowValue().setNacimiento(data.getNewValue());
     });
-    //Agrega una columna con un botón
-    TableColumn col_action = new TableColumn("Action");
-    personaTableView.getColumns().add(col_action);
-    col_action.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Disposer.Record, Boolean>, ObservableValue<Boolean>>() {
+    //Agrega una columna con un botón para borrar
+    TableColumn col_delete = new TableColumn("Borrar");
+    personaTableView.getColumns().add(col_delete);
+    col_delete.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Disposer.Record, Boolean>, ObservableValue<Boolean>>() {
       @Override
       public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Disposer.Record, Boolean> param) {
         return new SimpleBooleanProperty(param.getValue() != null);
       }
     });
     //Agrega el botón a la celda
-    col_action.setCellFactory(new Callback<TableColumn<Disposer.Record, Boolean>, TableCell<Disposer.Record, Boolean>>() {
+    col_delete.setCellFactory(new Callback<TableColumn<Disposer.Record, Boolean>, TableCell<Disposer.Record, Boolean>>() {
       @Override
       public TableCell<Disposer.Record, Boolean> call(TableColumn<Disposer.Record, Boolean> param) {
         return new ButtonCellBorrar();
+      }
+    });
+    //Agrega una columna con un botón para editar
+    TableColumn col_edit = new TableColumn("Editar");
+    personaTableView.getColumns().add(col_edit);
+    col_edit.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Disposer.Record, Boolean>
+            , ObservableValue<Boolean>>() {
+      @Override
+      public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Disposer.Record, Boolean> param) {
+        return new SimpleBooleanProperty(param.getValue() != null);
+      }
+    });
+    //Agrega el botón editar a la celda
+    col_edit.setCellFactory(new Callback<TableColumn<Disposer.Record, Boolean>,
+            TableCell<Disposer.Record, Boolean>>() {
+      @Override
+      public TableCell<Disposer.Record, Boolean> call(TableColumn<Disposer.Record, Boolean> param) {
+        return new ButtonCellEditar();
       }
     });
     personaTableView.setItems(personaObservableList);
@@ -150,10 +168,18 @@ public class Controller {
   }
 
   public void editNombre(TableColumn.CellEditEvent<Persona, String> personaStringCellEditEvent) {
-    System.out.println("Se modificó nombreTColumn:" + personaStringCellEditEvent.getOldValue() + " a:" + personaStringCellEditEvent.getNewValue());
-    //personaStringCellEditEvent.getRowValue()
+    String nombreOld = personaStringCellEditEvent.getOldValue();
     Persona p = personaStringCellEditEvent.getRowValue();
     p.setNombre(personaStringCellEditEvent.getNewValue());
+    Integer actualiza = personaService.actualizaPersona(p);
+    if (actualiza == 0) {
+      mensaje("E", "Actualiza nombre", "Ocurrió un error al actualizar la base de datos",
+              "");
+      p.setNombre(nombreOld);
+      personaTableView.refresh();
+      return;
+    }
+    personaTableView.refresh();
   }
 
   public void agregaRegistro(ActionEvent actionEvent) {
@@ -173,10 +199,10 @@ public class Controller {
     System.out.println("Nuevo registro:" + personaNueva.toString());
     //validación mediante validator
     Set<ConstraintViolation<Persona>> violations = validator.validate(personaNueva);
-    String cadenaViolation = "\nErrores: ";
+    String cadenaViolation = "";
     for (ConstraintViolation<Persona> violation : violations) {
       //logController.error(violation.getMessage());
-      cadenaViolation += "\n"+violation.getMessage() + "; ";
+      cadenaViolation += "\n" + violation.getMessage() + "; ";
     }
     System.out.println(violations.isEmpty());
     if (violations.isEmpty()) {
@@ -186,14 +212,14 @@ public class Controller {
         personaObservableList.add(personaNueva);
         personaTableView.refresh();
         logController.info("Se agregó un nuevo registro:" + personaNueva.toString());
-        System.out.println("Persona nueva:" + personaNueva.toString());
+        mensaje("I", "Alta", "Se agregó correctamente el registro", personaNueva.toString());
       } else {
         mensaje("E", "Error al guardar", "Error al guardar en la base de datos",
                 personaNueva.toString());
       }
     } else {
       mensaje("E", "Errores en los datos", "Corrija los datos de entrada",
-              personaNueva.toString()+cadenaViolation);
+              cadenaViolation);
     }
   }
 
@@ -225,7 +251,7 @@ public class Controller {
     return buttonType;
   }
 
-  //Clase para el botón en una celda de la tableview
+  //Clase para el botón borrar en una celda de la tableview
   private class ButtonCellBorrar extends TableCell<Disposer.Record, Boolean> {
     final Button cellButton = new Button("Borrar");
 
@@ -250,6 +276,35 @@ public class Controller {
           logController.info("Se borró el registro:" + currentPerson.toString());
           personaObservableList.remove(currentPerson);
           personaTableView.refresh();
+        }
+      });
+    }
+
+    //Display button if the row is not empty
+    @Override
+    protected void updateItem(Boolean t, boolean empty) {
+      super.updateItem(t, empty);
+      if (!empty) {
+        setGraphic(cellButton);
+      }
+    }
+  }
+
+  //Clase para el botón editar en una celda de la tableview
+  private class ButtonCellEditar extends TableCell<Disposer.Record, Boolean> {
+    final Button cellButton = new Button("Editar");
+
+    ButtonCellEditar() {
+      //Action when the button is pressed
+      cellButton.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent t) {
+          // get Selected Item
+          Persona currentPerson =
+                  (Persona) ButtonCellEditar.this.getTableView().getItems().get(ButtonCellEditar.this.getIndex());
+          ButtonType buttonType = mensaje("I", "Editar", "Registro a editar",
+                  currentPerson.toString());
+          if (buttonType != ButtonType.OK) return;
         }
       });
     }
